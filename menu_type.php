@@ -71,27 +71,27 @@
         }
 
         /* =================================================== */
-        /* [เพิ่มเติม] ส่วนตกแต่งปุ่ม "ไปหน้าเมนูtype" ให้สวยงามสไตล์เดียวกัน  */
+        /* [ส่วนที่เพิ่ม] ตกแต่งปุ่ม .btn-back ให้สวยงามและโมเดิร์น   */
         /* =================================================== */
         .btn-back {
             display: block;
             width: max-content;
-            margin: 30px auto 0 auto; /* จัดปุ่มให้อยู่กึ่งกลางหน้าจอใต้ตารางพอดี */
-            padding: 12px 24px;
-            background-color: #34495e; /* สีโทนเข้มเข้ากับหัวตาราง */
+            margin: 30px auto 0 auto; /* จัดปุ่มให้อยู่กึ่งกลางใต้ตาราง */
+            padding: 12px 28px;
+            background-color: #34495e; /* สีปุ่มโทนเดียวกับหัวตาราง */
             color: #ffffff;
             text-decoration: none; /* เอาเส้นใต้ลิงก์ออก */
             border-radius: 8px;
             font-weight: 500;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out; /* หน่วงเวลาเอฟเฟกต์ให้นุ่มนวล */
         }
 
         /* เอฟเฟกต์ตอนเอาเมาส์ไปชี้ที่ปุ่ม */
         .btn-back:hover {
-            background-color: #1a252f; /* สีเข้มขึ้นเล็กน้อย */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px); /* ปุ่มลอยขึ้นนิดหน่อยให้ดูมีมิติ */
+            background-color: #1a252f; /* เปลี่ยนสีปุ่มให้เข้มขึ้น */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* เพิ่มเงาให้ดูเด่น */
+            transform: translateY(-2px); /* ทำให้ปุ่มลอยขึ้นมาเล็กน้อย */
         }
     </style>
     </head>
@@ -108,7 +108,7 @@
 
         include "action/connect.php";
 // SELECT * FROM menus ดึง ทั้งหมดจากตะราง menus
-        $sql = "SELECT * FROM menus";
+        $sql = "SELECT * FROM menu_types";
 //                            ที่อยู่ฐาน , คิวรี่ 
         $result = mysqli_query($con, $sql);
 //      ทดสอบ
@@ -120,25 +120,14 @@
         <thead>
             <th>รหัสเมนู</th>
             <th>ชื่อเมนู</th>
-            <th>ราคา</th>
-            <th>ภาพ</th>
-            <th>ประเภท</th>
         </thead>
 
         <?php
-            foreach($result as $menu){
+            foreach($result as $menu_types){
                 ?>
                 <tr>
-                    <td><?= $menu["menu_id"] ?></td>
-                    <td><?= $menu["menu_name"] ?></td>
-                    <td><?= $menu["menu_price"] ?></td>
-
-                    <td> 
-                        <img src="<?= $menu["menu_image"] ?> "
-                        alt=""
-                        style="width:200px"> </td>
-
-                    <td><?= $menu["type_id"] ?></td>
+                    <td><?= $menu_types["type_id"] ?></td>
+                    <td><?= $menu_types["type_name"] ?></td>
                 </tr>
                 <?php
 
@@ -147,6 +136,7 @@
 
     </table>
 
-    <a href="menu_type.php" class="btn-back"> ไปหน้าเมนูtype</a>
+     <a href="index.php" class="btn-back"> ไปหน้าเมนูindex</a>
+
 </body>
 </html>
