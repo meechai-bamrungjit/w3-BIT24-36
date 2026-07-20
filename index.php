@@ -3,150 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>เมนูอาหารสุดอร่อย</title>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Sarabun', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
-            font-family: 'Sarabun', sans-serif;
-            background-color: #f4f7f6;
-            padding: 40px;
+            background-color: #f8f9fa;
+            color: #2d3436;
+            padding: 40px 20px;
         }
 
-        /* ตกแต่งตัวตารางเดิม */
-        table {
-            width: 100%;
-            max-width: 1000px;
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
-            border-collapse: collapse !important;
-            border: none !important; /* เอาขอบเส้นดำแบบเก่าออก */
+        }
+
+        /* หัวข้อหน้าเว็บ */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 2.2rem;
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        /* จัดเลย์เอาต์การ์ดอาหารด้วย CSS Grid */
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        /* ตัวการ์ดอาหาร */
+        .food-card {
             background: #ffffff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border-radius: 10px;
+            border-radius: 16px;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* ตกแต่งส่วนหัวตาราง */
-        thead {
-            background-color: #2c3e50;
-            color: #ffffff;
+        .food-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
         }
 
-        th {
-            padding: 16px;
-            text-align: left;
-            font-weight: 500;
-            font-size: 1.05rem;
+        /* โซนรูปภาพ */
+        .food-img-box {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            background-color: #eee;
         }
 
-        /* ตกแต่งเนื้อหาในตาราง */
-        tr {
-            border-bottom: 1px solid #eef2f5;
-        }
-
-        /* สลับสีแถวให้ดูง่าย */
-        tr:nth-child(even) {
-            background-color: #fafbfc;
-        }
-
-        /* ไฮไลท์ตอนเมาส์ชี้ */
-        tr:hover {
-            background-color: #f1f5f9;
-        }
-
-        td {
-            padding: 16px;
-            color: #4a5568;
-            vertical-align: middle;
-        }
-
-        /* ตกแต่งรูปภาพในตาราง */
-        td img {
-            width: 120px !important; /* ปรับขนาดให้โมเดิร์นขึ้น */
-            height: 80px;
+        .food-img-box img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.5s ease;
         }
 
-        /* =================================================== */
-        /* [เพิ่มเติม] ส่วนตกแต่งปุ่ม "ไปหน้าเมนูtype" ให้สวยงามสไตล์เดียวกัน  */
-        /* =================================================== */
+        .food-card:hover .food-img-box img {
+            transform: scale(1.08); /* เอฟเฟกต์รูปขยายตอนเมาส์ชี้ */
+        }
+
+        /* ป้ายประเภทอาหารลอยบนรูป */
+        .type-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.65);
+            color: #ffffff;
+            backdrop-filter: blur(4px);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* โซนรายละเอียดอาหาร */
+        .food-details {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .food-id {
+            font-size: 0.8rem;
+            color: #b2bec3;
+            margin-bottom: 4px;
+        }
+
+        .food-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        /* โซนล่างสุดของการ์ด (ราคา + ปุ่ม) */
+        .food-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px dashed #eef2f5;
+        }
+
+        .food-price {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #e67e22; /* สีส้มอาหารน่าทาน */
+        }
+
+        .btn-order {
+            background-color: #e74c3c;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-order:hover {
+            background-color: #c0392b;
+        }
+
+        /* ปุ่มกลับ/ไปหน้าจัดการเมนู */
         .btn-back {
             display: block;
             width: max-content;
-            margin: 30px auto 0 auto; /* จัดปุ่มให้อยู่กึ่งกลางหน้าจอใต้ตารางพอดี */
-            padding: 12px 24px;
-            background-color: #34495e; /* สีโทนเข้มเข้ากับหัวตาราง */
+            margin: 50px auto 0 auto;
+            padding: 12px 28px;
+            background-color: #2c3e50;
             color: #ffffff;
-            text-decoration: none; /* เอาเส้นใต้ลิงก์ออก */
-            border-radius: 8px;
+            text-decoration: none;
+            border-radius: 30px;
             font-weight: 500;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
         }
 
-        /* เอฟเฟกต์ตอนเอาเมาส์ไปชี้ที่ปุ่ม */
         .btn-back:hover {
-            background-color: #1a252f; /* สีเข้มขึ้นเล็กน้อย */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px); /* ปุ่มลอยขึ้นนิดหน่อยให้ดูมีมิติ */
+            background-color: #1a252f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
     </style>
-    </head>
+</head>
 <body>
-    
-    <?php
-//แสดง error
 
-// Report all PHP errors
-    error_reporting(E_ALL);
-// Force errors to be displayed on the screen
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
+    <?php
+        // แสดง error สำหรับตรวจสอบ
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
 
         include "action/connect.php";
-// SELECT * FROM menus ดึง ทั้งหมดจากตะราง menus
+        
+        // ดึงข้อมูลทั้งหมดจากตาราง menus
         $sql = "SELECT * FROM menus";
-//                            ที่อยู่ฐาน , คิวรี่ 
         $result = mysqli_query($con, $sql);
-//      ทดสอบ
-//  var_dump($result);
     ?>
 
-    <table border=1>
+    <div class="container">
+        
+        <!-- Header หน้าเว็บ -->
+        <div class="page-header">
+            <h1>🍽️ เมนูอาหารแนะนำ</h1>
+            <p>เลือกสรรความอร่อย ปรุงสดใหม่ทุกวันส่งตรงถึงคุณ</p>
+        </div>
 
-        <thead>
-            <th>รหัสเมนู</th>
-            <th>ชื่อเมนู</th>
-            <th>ราคา</th>
-            <th>ภาพ</th>
-            <th>ประเภท</th>
-        </thead>
+        <!-- รายการเมนูอาหารแบบ การ์ด -->
+        <div class="food-grid">
+            <?php foreach($result as $menu): ?>
+                <div class="food-card">
+                    <!-- รูปภาพ + ป้ายประเภท -->
+                    <div class="food-img-box">
+                        <img src="<?= $menu["menu_image"] ?>" alt="<?= $menu["menu_name"] ?>">
+                        <span class="type-badge">ประเภท #<?= $menu["type_id"] ?></span>
+                    </div>
 
-        <?php
-            foreach($result as $menu){
-                ?>
-                <tr>
-                    <td><?= $menu["menu_id"] ?></td>
-                    <td><?= $menu["menu_name"] ?></td>
-                    <td><?= $menu["menu_price"] ?></td>
+                    <!-- รายละเอียดเมนู -->
+                    <div class="food-details">
+                        <span class="food-id">รหัสเมนู: <?= $menu["menu_id"] ?></span>
+                        <h3 class="food-title"><?= $menu["menu_name"] ?></h3>
+                        
+                        <div class="food-footer">
+                            <span class="food-price">฿<?= number_format($menu["menu_price"], 2) ?></span>
+                            <a href="#" class="btn-order">🛒 สั่งซื้อ</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
 
-                    <td> 
-                        <img src="<?= $menu["menu_image"] ?> "
-                        alt=""
-                        style="width:200px"> </td>
+        <!-- ปุ่มไปหน้าจัดการเมนู -->
+        <a href="manage_menu.php" class="btn-back">⚙️ ไปหน้าจัดการเมนู (manage_menu)</a>
 
-                    <td><?= $menu["type_id"] ?></td>
-                </tr>
-                <?php
+    </div>
 
-            }
-        ?>
-
-    </table>
-
-    <a href="menu_type.php" class="btn-back"> ไปหน้าเมนูtype</a>
 </body>
 </html>
