@@ -26,7 +26,7 @@
             margin: 0 auto;
         }
 
-        /* ส่วนหัว + ปุ่มเพิ่มเมนู */
+        /* ส่วนหัว + โซนกลุ่มปุ่มกด */
         .admin-header {
             display: flex;
             justify-content: space-between;
@@ -50,12 +50,39 @@
             margin-top: 2px;
         }
 
+        /* จัดการกลุ่มปุ่มให้อยู่ข้างกัน */
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* ปุ่มกลับหน้าหลัก (Index) */
+        .btn-index {
+            background-color: #34495e;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-index:hover {
+            background-color: #2c3e50;
+            transform: translateY(-1px);
+        }
+
         /* ปุ่มเพิ่มเมนูอาหาร */
         .btn-add {
             background-color: #27ae60;
             color: #ffffff;
             text-decoration: none;
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 8px;
             font-weight: 600;
             font-size: 0.95rem;
@@ -174,22 +201,6 @@
         .btn-delete:hover {
             background-color: #c0392b;
         }
-
-        /* ลิงก์ไปหน้าเมนูฝั่งลูกค้า */
-        .btn-view-store {
-            display: block;
-            width: max-content;
-            margin: 30px auto 0 auto;
-            color: #7f8c8d;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .btn-view-store:hover {
-            color: #2c3e50;
-        }
     </style>
 </head>
 <body>
@@ -213,7 +224,12 @@
             <h2>⚙️ ระบบจัดการเมนูอาหาร</h2>
             <p>เพิ่ม แก้ไข หรือลบรายการอาหารในระบบ</p>
         </div>
-        <a href="add_menu.php" class="btn-add">➕ เพิ่มเมนูอาหาร</a>
+        
+        <!-- กลุ่มปุ่มกดที่อยู่ด้านขวาบน -->
+        <div class="header-actions">
+            <a href="index.php" class="btn-index">🏪 หน้าหลัก (index)</a>
+            <a href="add_menu.php" class="btn-add">➕ เพิ่มเมนูอาหาร</a>
+        </div>
     </div>
 
     <!-- ตารางรายการเมนู -->
@@ -250,9 +266,6 @@
             </tbody>
         </table>
     </div>
-
-    <!-- ลิงก์กลับไปดูหน้าร้านฝั่งลูกค้า -->
-    <a href="index.php" class="btn-view-store">🏪 ไปยังหน้าแสดงเมนูอาหาร (ฝั่งลูกค้า)</a>
 
 </div>
 

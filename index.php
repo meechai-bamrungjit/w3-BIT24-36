@@ -14,16 +14,24 @@
             margin: 0;
             padding: 0;
         }
-
+      
         body {
-            background-color: #f8f9fa;
+            background-color: #ffffff;
             color: #2d3436;
-            padding: 40px 20px;
+        }
+
+        /* 📌 เพิ่มส่วน Navbar ด้านบน */
+        .navbar {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 12px 20px;
+            margin-bottom: 30px;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
         /* หัวข้อหน้าเว็บ */
@@ -84,7 +92,7 @@
         }
 
         .food-card:hover .food-img-box img {
-            transform: scale(1.08); /* เอฟเฟกต์รูปขยายตอนเมาส์ชี้ */
+            transform: scale(1.08);
         }
 
         /* ป้ายประเภทอาหารลอยบนรูป */
@@ -136,7 +144,7 @@
         .food-price {
             font-size: 1.35rem;
             font-weight: 700;
-            color: #e67e22; /* สีส้มอาหารน่าทาน */
+            color: #e67e22;
         }
 
         .btn-order {
@@ -156,29 +164,37 @@
             background-color: #c0392b;
         }
 
-        /* ปุ่มกลับ/ไปหน้าจัดการเมนู */
+        /* ปุ่มจัดการเมนู */
         .btn-back {
-            display: block;
-            width: max-content;
-            margin: 50px auto 0 auto;
-            padding: 12px 28px;
+            display: inline-block;
+            padding: 8px 20px;
             background-color: #2c3e50;
             color: #ffffff;
             text-decoration: none;
-            border-radius: 30px;
+            border-radius: 5px;
             font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
 
         .btn-back:hover {
             background-color: #1a252f;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 📌 เพิ่มส่วน Footer ด้านล่าง */
+        footer {
+            margin-top: 50px;
+            background-color: #2c3e50;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
         }
     </style>
 </head>
+
 <body>
+
 
     <?php
         // แสดง error สำหรับตรวจสอบ
@@ -200,6 +216,14 @@
             <h1>🍽️ เมนูอาหารแนะนำ</h1>
             <p>เลือกสรรความอร่อย ปรุงสดใหม่ทุกวันส่งตรงถึงคุณ</p>
         </div>
+
+
+        <!-- แถบ Navbar ปุ่มซ้ายบน -->
+         <div class="navbar">
+              <a href="manage_menu.php" class="btn-back">⚙️ ไปหน้าจัดการเมนู (manage_menu)</a>
+          </div>
+
+
 
         <!-- รายการเมนูอาหารแบบ การ์ด -->
         <div class="food-grid">
@@ -225,10 +249,12 @@
             <?php endforeach; ?>
         </div>
 
-        <!-- ปุ่มไปหน้าจัดการเมนู -->
-        <a href="manage_menu.php" class="btn-back">⚙️ ไปหน้าจัดการเมนู (manage_menu)</a>
-
     </div>
+
+    <!-- ส่วน Footer ท้ายเว็บ -->
+    <footer>
+        <p>&copy; เมนูอาหารสุดอร่อย - All Rights Reserved   Meechai Bamringjit BIT2/4 36</p>
+    </footer>
 
 </body>
 </html>
