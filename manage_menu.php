@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบจัดการเมนูอาหาร</title>
     
+    <!-- =================================================== -->
+    <!--  [ส่วนตกแต่ง CSS] แยกไว้ตรงนี้ชัดเจน ไม่เกี่ยวกับสคริปต์ PHP  -->
+    <!-- =================================================== -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
 
@@ -201,7 +204,18 @@
         .btn-delete:hover {
             background-color: #c0392b;
         }
+
+         footer {
+            margin-top: 50px;
+            background-color: #2c3e50;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        
     </style>
+    <!-- =================================================== -->
 </head>
 <body>
 
@@ -268,6 +282,10 @@
     </div>
 
 </div>
+                 <!-- ส่วน Footer ท้ายเว็บ -->
+    <footer>
+        <p>&copy; เมนูอาหารสุดอร่อย - All Rights Reserved   Meechai Bamringjit BIT2/4 36</p>
+    </footer>
 
 </body>
 </html>
