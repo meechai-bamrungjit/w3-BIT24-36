@@ -1,134 +1,180 @@
+<?php
+session_start();
+
+// ตรวจสอบการล็อกอิน
+if (!isset($_SESSION["username"])) {
+    header("location: login.php");
+    exit;
+}
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+include "action/connect.php";
+
+$id = $_GET['id'] ?? '';
+
+// ดึงข้อมูลเมนูที่ต้องการแก้ไข
+$sql = "SELECT * FROM menus WHERE menu_id = '$id'";
+$result = mysqli_query($con, $sql);
+$menu = mysqli_fetch_assoc($result);
+
+if (!$menu) {
+    header("location: manage_menu.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แก้ไขรายการเมนู</title>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
-
         * {
             box-sizing: border-box;
-            font-family: 'Sarabun', sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             margin: 0;
             padding: 0;
         }
 
         body {
-            background-color: #f8f9fa;
+            /* ธีม Dark Cyber Glassmorphism */
+            background-color: #080b11;
+            background-image: 
+                radial-gradient(at 15% 15%, rgba(99, 102, 241, 0.18) 0px, transparent 50%),
+                radial-gradient(at 85% 85%, rgba(168, 85, 247, 0.18) 0px, transparent 50%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 40px 20px;
+            color: #f8fafc;
         }
 
-        /* การ์ดฟอร์มกลางหน้าจอ */
+        /* การ์ดฟอร์ม Glassmorphism */
         .card {
-            background: #ffffff;
-            padding: 35px 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            background: rgba(15, 21, 32, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(99, 102, 241, 0.1);
+            padding: 40px 35px;
             max-width: 480px;
             width: 100%;
         }
 
         .card-header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 28px;
         }
 
         .card-header h2 {
             font-size: 1.6rem;
-            color: #2c3e50;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 6px;
-            font-weight: 700;
         }
 
         .card-header p {
-            color: #7f8c8d;
-            font-size: 0.9rem;
+            color: #94a3b8;
+            font-size: 0.88rem;
         }
 
-        /* จัดระยะห่างแต่ละช่องกรอก */
+        .card-header strong {
+            color: #c084fc;
+        }
+
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
             font-weight: 600;
-            color: #34495e;
-            margin-bottom: 6px;
-            font-size: 0.95rem;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
 
-        /* ตกแต่ง Input และ Select */
+        /* ช่องกรอกข้อมูล Cyber Input */
         input[type="text"],
-        input[type="number"],
-        select {
+        input[type="number"] {
             width: 100%;
-            padding: 12px 14px;
-            border: 1.5px solid #dcdde1;
-            border-radius: 8px;
+            padding: 12px 16px;
+            background-color: rgba(9, 13, 22, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
             font-size: 0.95rem;
-            color: #2f3640;
-            background-color: #fafafa;
+            color: #f8fafc;
             transition: all 0.3s ease;
             outline: none;
         }
 
         input[type="text"]:focus,
-        input[type="number"]:focus,
-        select:focus {
-            border-color: #e67e22;
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.15);
+        input[type="number"]:focus {
+            border-color: #f59e0b;
+            background-color: rgba(9, 13, 22, 0.9);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.25);
         }
 
-        /* ตัวอย่างรูปภาพปัจจุบัน */
+        input[readonly] {
+            background-color: rgba(255, 255, 255, 0.03);
+            color: #64748b;
+            border-color: rgba(255, 255, 255, 0.05);
+            cursor: not-allowed;
+        }
+
+        /* กรอบแสดงภาพตัวอย่าง */
         .current-img-box {
             text-align: center;
-            margin-top: 8px;
-            padding: 10px;
-            background-color: #f1f2f6;
-            border-radius: 8px;
+            margin-top: 10px;
+            padding: 12px;
+            background-color: rgba(9, 13, 22, 0.6);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
         }
 
         .current-img-box img {
             max-width: 100%;
-            height: 120px;
+            height: 130px;
             object-fit: cover;
-            border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .img-hint {
-            font-size: 0.8rem;
-            color: #7f8c8d;
-            margin-top: 4px;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 6px;
         }
 
-        /* ตกแต่งปุ่มบันทึกการแก้ไข */
+        /* ปุ่มบันทึกการแก้ไข */
         button[type="submit"] {
             width: 100%;
-            background-color: #e67e22; /* สีส้มอมน้ำตาลสำหรับโหมดแก้ไข */
-            color: white;
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            color: #ffffff;
             border: none;
-            padding: 13px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
+            padding: 14px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 10px;
             cursor: pointer;
             margin-top: 10px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.25);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         button[type="submit"]:hover {
-            background-color: #d35400;
-            transform: translateY(-1px);
+            filter: brightness(1.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.5);
         }
 
         button[type="submit"]:active {
@@ -139,81 +185,55 @@
         .btn-back {
             display: block;
             text-align: center;
-            margin-top: 20px;
-            color: #7f8c8d;
+            margin-top: 22px;
+            color: #94a3b8;
             text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 0.85rem;
+            font-weight: 600;
             transition: color 0.2s ease;
         }
 
         .btn-back:hover {
-            color: #2c3e50;
+            color: #f8fafc;
         }
     </style>
 </head>
 <body>
 
-    <?php
-        $id = $_GET['id'];
-
-        include "action/connect.php";
-        
-        $sql = "SELECT * FROM menus WHERE menu_id = '$id' ";
-        $result = mysqli_query($con, $sql);
-        $menu = mysqli_fetch_assoc($result);
-    ?>
-
     <div class="card">
         
         <div class="card-header">
             <h2>✏️ แก้ไขรายการเมนูอาหาร</h2>
-            <p>ปรับปรุงข้อมูลเมนู: <strong><?= $menu['menu_name'] ?></strong></p>
+            <p>ปรับปรุงข้อมูลเมนู: <strong><?= htmlspecialchars($menu['menu_name']) ?></strong></p>
         </div>
 
         <form action="action/update_menu.php" method="post">
 
             <div class="form-group">
                 <label for="menu_id">🔑 รหัสเมนู</label>
-                <input type="text" name="menu_id" id="menu_id" value="<?= $menu['menu_id'] ?>" required>
+                <input type="text" name="menu_id" id="menu_id" value="<?= htmlspecialchars($menu['menu_id']) ?>" readonly required>
             </div>
 
             <div class="form-group">
                 <label for="menu_name">🍱 ชื่อเมนูอาหาร</label>
-                <input type="text" name="menu_name" id="menu_name" value="<?= $menu['menu_name'] ?>" required>
+                <input type="text" name="menu_name" id="menu_name" value="<?= htmlspecialchars($menu['menu_name']) ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="menu_price">💵 ราคา (บาท)</label>
-                <input type="number" step="any" name="menu_price" id="menu_price" value="<?= $menu['menu_price'] ?>" required>
+                <input type="number" step="any" name="menu_price" id="menu_price" value="<?= htmlspecialchars($menu['menu_price']) ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="menu_image">🖼️ ลิงก์รูปภาพ (Path / URL)</label>
-                <input type="text" name="menu_image" id="menu_image" value="<?= $menu['menu_image'] ?>" required>
+                <input type="text" name="menu_image" id="menu_image" value="<?= htmlspecialchars($menu['menu_image']) ?>" required>
                 
-                <!-- แสดงตัวอย่างรูปภาพเดิม -->
                 <div class="current-img-box">
-                    <img src="<?= $menu['menu_image'] ?>" alt="ตัวอย่างรูปภาพ">
+                    <img src="<?= htmlspecialchars($menu['menu_image']) ?>" 
+                         alt="ตัวอย่างรูปภาพ"
+                         onerror="this.src='https://via.placeholder.com/300x130/0f1520/818cf8?text=No+Image';">
                     <div class="img-hint">รูปภาพปัจจุบัน</div>
                 </div>
-            </div>
-
-            <?php
-                include "action/connect.php";
-                $sql = "SELECT * FROM menu_types";
-                $result = mysqli_query($con, $sql);
-            ?>
-
-            <div class="form-group">
-                <label for="type_id">🏷️ ประเภทเมนู</label>
-                <select name="type_id" id="type_id" required>
-                    <?php foreach($result as $type): ?>
-                        <option value="<?= $type["type_id"] ?>" <?= $type["type_id"] == $menu["type_id"] ? "selected" : ''?>>
-                            <?= $type["type_name"] ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
             </div>
 
             <button type="submit">💾 บันทึกการแก้ไข</button>

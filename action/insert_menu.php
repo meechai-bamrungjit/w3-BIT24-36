@@ -1,27 +1,40 @@
 <?php
+session_start();
 
-    $menu_id = $_POST["menu_id"];
-    $menu_name = $_POST["menu_name"];
-    $menu_price = $_POST["menu_price"];
-    $menu_image = $_POST["menu_image"];
-    $type_id = $_POST["type_id"];
+// ป้องกันการเข้าถึงโดยไม่ได้ล็อกอิน
+if (!isset($_SESSION["username"])) {
+    header("location: ../login.php");
+    exit;
+}
 
-
-
+// ตรวจสอบว่าได้รับการส่งข้อมูลแบบ POST
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include "connect.php";
-    // SELECT * FROM menu_types ดึง ทั้งหมดจากตะราง menu_types
-    $sql = "INSERT INTO `menus`
-     (`menu_id`,`menu_name`,`menu_price`,`menu_image`, `type_id`)
 
-     VALUES 
-     ('$menu_id','$menu_name','$menu_price','$menu_image','$type_id')";
+    // รับค่าและป้องกัน SQL Injection
+    $menu_name  = mysqli_real_escape_string($con, $_POST["menu_name"]);
+    $menu_price = mysqli_real_escape_string($con, $_POST["menu_price"]);
+    $menu_image = mysqli_real_escape_string($con, $_POST["menu_image"]);
+
+    // คำสั่ง SQL สำหรับเพิ่มรายการเมนูใหม่ (menu_id รันอัตโนมัติ)
+    $sql = "INSERT INTO `menus` (`menu_name`, `menu_price`, `menu_image`)
+            VALUES ('$menu_name', '$menu_price', '$menu_image')";
 
     $result = mysqli_query($con, $sql);
-    
-    if(!$result){
-        echo"Error go back to fix NiggaDum";
-    }else{
-        header("location: ../index.php");
+
+    if ($result) {
+        // เพิ่มข้อมูลสำเร็จ กลับไปหน้าจัดการเมนู
+        header("location: ../manage_menu.php");
         exit;
+    } else {
+        // กรณีเกิดข้อผิดพลาด
+        echo "<script>
+                alert('เกิดข้อผิดพลาดในการเพิ่มเมนูอาหาร: " . mysqli_error($con) . "');
+                window.history.back();
+              </script>";
     }
+} else {
+    header("location: ../manage_menu.php");
+    exit;
+}
 ?>
